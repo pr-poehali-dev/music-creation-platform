@@ -6,18 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-interface Beat {
-  id: number;
-  name: string;
-  bpm: number;
-  genre: string;
-}
-
-interface Effect {
-  name: string;
-  icon: string;
-}
+import { Beat, Effect } from '@/types';
 
 interface StudioTabProps {
   isPlaying: boolean;

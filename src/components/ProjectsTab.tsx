@@ -1,15 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
-
-interface Track {
-  id: number;
-  title: string;
-  artist: string;
-  duration: string;
-  plays: number;
-  genre: string;
-}
+import { Track } from '@/types';
 
 interface ProjectsTabProps {
   myProjects: Track[];

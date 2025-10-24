@@ -1,12 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
-
-interface Artist {
-  name: string;
-  tracks: number;
-  followers: string;
-}
+import { Artist } from '@/types';
 
 interface HomeTabProps {
   popularArtists: Artist[];

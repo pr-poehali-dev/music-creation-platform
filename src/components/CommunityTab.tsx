@@ -3,21 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
-
-interface Track {
-  id: number;
-  title: string;
-  artist: string;
-  duration: string;
-  plays: number;
-  genre: string;
-}
-
-interface Artist {
-  name: string;
-  tracks: number;
-  followers: string;
-}
+import { Track, Artist } from '@/types';
 
 interface CommunityTabProps {
   communityTracks: Track[];

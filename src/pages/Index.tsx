@@ -5,22 +5,7 @@ import StudioTab from '@/components/StudioTab';
 import CommunityTab from '@/components/CommunityTab';
 import ProjectsTab from '@/components/ProjectsTab';
 import Footer from '@/components/Footer';
-
-interface Track {
-  id: number;
-  title: string;
-  artist: string;
-  duration: string;
-  plays: number;
-  genre: string;
-}
-
-interface Beat {
-  id: number;
-  name: string;
-  bpm: number;
-  genre: string;
-}
+import { Track, Beat } from '@/types';
 
 const Index = () => {
   const [currentTab, setCurrentTab] = useState('home');
