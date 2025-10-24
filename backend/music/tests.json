@@ -1,0 +1,26 @@
+{
+  "tests": [
+    {
+      "name": "Get all artists",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Get specific artist tracks",
+      "method": "GET",
+      "path": "/?artist=баста",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Artist not found",
+      "method": "GET",
+      "path": "/?artist=unknown",
+      "expectedStatus": 404,
+      "expectedBody": {
+        "error": "Artist not found"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

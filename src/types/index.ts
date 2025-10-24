@@ -5,6 +5,7 @@ export interface Track {
   duration: string;
   plays: number;
   genre: string;
+  preview_url?: string;
 }
 
 export interface Beat {

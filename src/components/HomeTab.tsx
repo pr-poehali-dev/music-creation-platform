@@ -6,9 +6,10 @@ import { Artist } from '@/types';
 interface HomeTabProps {
   popularArtists: Artist[];
   setCurrentTab: (tab: string) => void;
+  onArtistClick?: (artistName: string) => void;
 }
 
-const HomeTab = ({ popularArtists, setCurrentTab }: HomeTabProps) => {
+const HomeTab = ({ popularArtists, setCurrentTab, onArtistClick }: HomeTabProps) => {
   return (
     <div className="space-y-12">
       <section className="text-center py-20 relative">
@@ -57,7 +58,11 @@ const HomeTab = ({ popularArtists, setCurrentTab }: HomeTabProps) => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full" variant="outline">
+                <Button 
+                  className="w-full" 
+                  variant="outline"
+                  onClick={() => onArtistClick && onArtistClick(artist.name)}
+                >
                   <Icon name="Play" size={16} className="mr-2" />
                   Слушать
                 </Button>

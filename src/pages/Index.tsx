@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import HomeTab from '@/components/HomeTab';
 import StudioTab from '@/components/StudioTab';
 import CommunityTab from '@/components/CommunityTab';
 import ProjectsTab from '@/components/ProjectsTab';
 import Footer from '@/components/Footer';
-import { Track, Beat } from '@/types';
+import { Track, Beat, Artist } from '@/types';
+import ArtistTracksTab from '@/components/ArtistTracksTab';
 
 const Index = () => {
   const [currentTab, setCurrentTab] = useState('home');
@@ -13,12 +14,66 @@ const Index = () => {
   const [selectedBeat, setSelectedBeat] = useState<Beat | null>(null);
   const [lyrics, setLyrics] = useState('');
   const [projectName, setProjectName] = useState('');
+  const [popularArtists, setPopularArtists] = useState<Artist[]>([]);
+  const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
+  const [artistTracks, setArtistTracks] = useState<Track[]>([]);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const [currentlyPlayingId, setCurrentlyPlayingId] = useState<number | null>(null);
 
-  const popularArtists = [
-    { name: 'Ваня Дмитриенко', tracks: 24, followers: '2.5М' },
-    { name: 'Дима Масленников', tracks: 18, followers: '1.8М' },
-    { name: 'Дима Билан', tracks: 156, followers: '4.2М' },
-  ];
+  useEffect(() => {
+    fetch('https://functions.poehali.dev/e574ce03-e2d6-4bdc-9188-c3d391e98865')
+      .then(res => res.json())
+      .then(data => {
+        if (data.artists) {
+          setPopularArtists(data.artists);
+        }
+      })
+      .catch(err => console.error('Error loading artists:', err));
+  }, []);
+
+  const handleArtistClick = async (artistName: string) => {
+    setSelectedArtist(artistName);
+    try {
+      const response = await fetch(
+        `https://functions.poehali.dev/e574ce03-e2d6-4bdc-9188-c3d391e98865?artist=${encodeURIComponent(artistName.toLowerCase())}`
+      );
+      const data = await response.json();
+      if (data.top_tracks) {
+        const tracks: Track[] = data.top_tracks.map((t: any) => ({
+          ...t,
+          artist: artistName,
+          preview_url: t.preview_url
+        }));
+        setArtistTracks(tracks);
+        setCurrentTab('artist-tracks');
+      }
+    } catch (err) {
+      console.error('Error loading artist tracks:', err);
+    }
+  };
+
+  const handlePlayTrack = (track: Track & { preview_url?: string }) => {
+    if (currentAudio) {
+      currentAudio.pause();
+    }
+
+    if (currentlyPlayingId === track.id) {
+      setCurrentlyPlayingId(null);
+      setCurrentAudio(null);
+      return;
+    }
+
+    if (track.preview_url) {
+      const audio = new Audio(track.preview_url);
+      audio.play();
+      audio.onended = () => {
+        setCurrentlyPlayingId(null);
+        setCurrentAudio(null);
+      };
+      setCurrentAudio(audio);
+      setCurrentlyPlayingId(track.id);
+    }
+  };
 
   const beats: Beat[] = [
     { id: 1, name: 'Trap Vibes', bpm: 140, genre: 'Trap' },
@@ -55,7 +110,21 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-8">
         {currentTab === 'home' && (
-          <HomeTab popularArtists={popularArtists} setCurrentTab={setCurrentTab} />
+          <HomeTab 
+            popularArtists={popularArtists} 
+            setCurrentTab={setCurrentTab}
+            onArtistClick={handleArtistClick}
+          />
+        )}
+
+        {currentTab === 'artist-tracks' && selectedArtist && (
+          <ArtistTracksTab
+            artistName={selectedArtist}
+            tracks={artistTracks}
+            currentlyPlayingId={currentlyPlayingId}
+            onPlayTrack={handlePlayTrack}
+            onBack={() => setCurrentTab('home')}
+          />
         )}
 
         {currentTab === 'studio' && (
